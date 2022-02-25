@@ -66,7 +66,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductCategory
-        fields = ["category", "sub_category"]
+        fields = ["category", "sub_category","icon"]
 
     def get_sub_category(self, obj):
         return obj.sub_category.all().values_list("category", flat=True)

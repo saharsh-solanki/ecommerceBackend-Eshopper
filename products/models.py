@@ -56,6 +56,7 @@ class ProductImage(models.Model):
 
 
 class ProductCategory(models.Model):
+    icon = models.ImageField(upload_to='media/category_icon',null=True,blank=True)
     category = models.CharField(max_length=250)
     sub_category = models.ManyToManyField("ProductCategory",related_name="product_sub_category",null=True,blank=True)
 
