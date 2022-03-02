@@ -4,16 +4,26 @@ from rest_framework import serializers
 
 from products.models import Product, ProductSize, ProductCategory, ProductImage
 
+class ProductImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = "__all__"
+
 class ProductCategorySerializer(serializers.ModelSerializer):
     '''Product Size Serialzer That return deials of product size and colors'''
     product_count = serializers.SerializerMethodField(read_only=True)
+    sub_category = serializers.SerializerMethodField()
+
+    def get_sub_category(self,obj):
+        return obj.sub_category.filter().values()
 
     def get_product_count(self,obj):
         return Product.objects.filter(product_category__id=obj.id).count()
 
     class Meta:
         model = ProductCategory
-        fields = "__all__"
+        fields = ["category","icon","id","sub_category","product_count"]
 
 
 
@@ -38,6 +48,7 @@ class ProductSerializer(serializers.ModelSerializer):
     size = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
     stock_detail = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
 
     def count(self):
         return self.instance.count()
@@ -55,9 +66,16 @@ class ProductSerializer(serializers.ModelSerializer):
                 "in_stock": True if sum(stock_obj.values_list("stock", flat=True)) >= sum(
                     stock_obj.values_list("productOrderCount", flat=True)) else False}
 
+    def get_images(self, obj):
+        image = ProductImageSerializer(instance=ProductImage.objects.filter(product_image_key__id=obj.id).first())
+        images = ProductImageSerializer(instance= ProductImage.objects.filter(product_image_key__id=obj.id) , many=True )
+        return {"image": image.data,
+                "images": images.data,
+              }
+
     class Meta:
         model = Product
-        fields = ["product_name", "id", "price", "description", "size", "color", "stock_detail"]
+        fields = ["product_name", "id", "price", "description", "size", "color", "stock_detail","images"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
