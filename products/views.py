@@ -36,9 +36,21 @@ class ProductFilter(django_filters.FilterSet):
 
 
 class ProductPaggination(PageNumberPagination):
-    page_size = 20
+    page_size = 2
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
+    def get_next_link(self):
+        if not self.page.has_next():
+            return None
+        page_number = self.page.next_page_number()
+        return page_number
+
+    def get_previous_link(self):
+        if not self.page.has_previous():
+            return None
+        page_number = self.page.previous_page_number()
+        return page_number
 
 class ProductView(generics.ListAPIView):
     pagination_class = ProductPaggination
@@ -54,15 +66,15 @@ class ProductView(generics.ListAPIView):
         if "category" in self.request.data:
             if self.request.data.get("category"):
                 query_list.append(Q(product_category__in=self.request.data.get("category")))
-        if "colors" in self.request.data:
-            if self.request.data['colors']:
-                products_ids = ProductSize.objects.filter(color__color__in=self.request.data['colors']).values_list(
+        if "colors[]" in self.request.query_params:
+            if self.request.query_params.getlist("colors[]"):
+                products_ids = ProductSize.objects.filter(color__color__in= self.request.query_params.getlist("colors[]") ).values_list(
                     "product_size_key",
                     flat=True).distinct()
                 query_list.append(Q(id__in=products_ids))
-        if "sizes" in self.request.data:
-            if self.request.data['sizes']:
-                products_ids = ProductSize.objects.filter(sizes__size__in=self.request.data['sizes']).values_list(
+        if "sizes[]" in self.request.query_params:
+            if self.request.query_params.getlist("sizes[]"):
+                products_ids = ProductSize.objects.filter(sizes__size__in=self.request.query_params.getlist("sizes[]")).values_list(
                     "product_size_key",
                     flat=True).distinct()
                 query_list.append(Q(id__in=products_ids))

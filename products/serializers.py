@@ -2,7 +2,8 @@ from django.db import connection
 from django.db.migrations import serializer
 from rest_framework import serializers
 
-from products.models import Product, ProductSize, ProductCategory, ProductImage
+from products.models import Product, ProductSize, ProductCategory, ProductImage, ProductColors, Sizes
+
 
 class ProductImageSerializer(serializers.ModelSerializer):
 
@@ -95,6 +96,14 @@ class ExtraDetailSerializer(serializers.Serializer):
     top_category = serializers.SerializerMethodField()
     trandy_product = serializers.SerializerMethodField()
     latest_product = serializers.SerializerMethodField()
+    colors_for_fillter = serializers.SerializerMethodField()
+    sizes_for_fillter = serializers.SerializerMethodField()
+
+    def get_colors_for_fillter(self,obj):
+        return ProductColors.objects.all().distinct().values_list("color",flat=True)
+
+    def get_sizes_for_fillter(self,obj):
+        return Sizes.objects.all().distinct().values_list("size",flat=True)
 
     def get_slider_product(self, obj):
         return ProductImage.objects.all().order_by("?")[:5].values("product_image_key__product_name","image")
@@ -110,4 +119,4 @@ class ExtraDetailSerializer(serializers.Serializer):
 
 
     class Meta:
-        fields = ["slider_product","top_category","trandy_product","latest_product"]
+        fields = ["slider_product","top_category","trandy_product","latest_product","colors_for_fillter","sizes_for_fillter"]
