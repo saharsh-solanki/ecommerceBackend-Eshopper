@@ -14,4 +14,10 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ["user","product","quantity","product_detail"]
 
     def get_product_detail(self,obj):
-        return ProductSerializer(instance=Product.objects.get(id=obj.product.id)).data
+        data =  ProductSerializer(instance=Product.objects.get(id=obj.product.id)).data
+        data["totalPrice"] = data["price"] * obj.quantity
+        return data
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation

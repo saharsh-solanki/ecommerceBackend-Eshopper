@@ -36,7 +36,7 @@ class ProductFilter(django_filters.FilterSet):
 
 
 class ProductPaggination(PageNumberPagination):
-    page_size = 2
+    page_size = 20
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -78,6 +78,12 @@ class ProductView(generics.ListAPIView):
                     "product_size_key",
                     flat=True).distinct()
                 query_list.append(Q(id__in=products_ids))
+        if "minPrice" in self.request.query_params and "maxPrice" in self.request.query_params:
+            products_ids = ProductSize.objects.filter(
+                product_size_key__price__range=(self.request.query_params.get("minPrice") , self.request.query_params.get("maxPrice"))).values_list(
+                "product_size_key",
+                flat=True).distinct()
+            query_list.append(Q(id__in=products_ids))
         if query_list:
             return super().get_queryset().filter(reduce(operator.and_, query_list)).distinct()
         else:

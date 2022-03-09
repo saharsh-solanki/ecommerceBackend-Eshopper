@@ -18,6 +18,23 @@ class CartView(generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPI
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        totalProductPrice = 0
+        shipping = 49
+        if data:
+            for cart in data:
+                totalProductPrice = cart["product_detail"]["totalPrice"] + totalProductPrice
+        return Response({"data":data,"totalProductPrice":totalProductPrice+shipping,"shipping":shipping,"subtotal":totalProductPrice})
+
     def create(self, request, *args, **kwargs):
         if Cart.objects.filter(user__id=request.user.id, product__id=request.data['product']).exists():
             cart = Cart.objects.get(user__id=request.user.id, product__id=request.data['product'])
