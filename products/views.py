@@ -63,9 +63,9 @@ class ProductView(generics.ListAPIView):
 
     def get_queryset(self):
         query_list = []
-        if "category" in self.request.data:
-            if self.request.data.get("category"):
-                query_list.append(Q(product_category__in=self.request.data.get("category")))
+        if "category[]" in self.request.query_params:
+            if self.request.query_params.getlist("category[]"):
+                query_list.append(Q(product_category__in=self.request.query_params.getlist("category[]")))
         if "colors[]" in self.request.query_params:
             if self.request.query_params.getlist("colors[]"):
                 products_ids = ProductSize.objects.filter(color__color__in= self.request.query_params.getlist("colors[]") ).values_list(

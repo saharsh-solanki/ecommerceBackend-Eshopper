@@ -21,6 +21,7 @@ class SiteUserSerializer(serializers.ModelSerializer):
                                      error_messages={"max_length": "Length of password should be less then 32 Char",
                                                      "min_length": "Length of password should be grater then 8 Char"})
 
+    profile_image = serializers.SerializerMethodField()
 
     class Meta:
         model = SiteUser
@@ -43,6 +44,13 @@ class SiteUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+    def get_profile_image(self, obj):
+        request = self.context.get('request')
+        if obj.profile_image:
+            return request.build_absolute_uri(obj.profile_image.url)
+        else:
+            return  request.build_absolute_uri("/media/media/profile_images/deafult_user_image.png")
 
 
 class MyTokenObtainPairSerializer(TokenObtainSerializer):
