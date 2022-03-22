@@ -90,6 +90,14 @@ class ProductView(generics.ListAPIView):
             return super().get_queryset()
 
 
+class SingleProductView(generics.RetrieveAPIView):
+
+    pagination_class = ProductPaggination
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+
 class ProductCategoryhView(generics.ListAPIView):
     queryset = ProductCategory.objects.all()
     serializer_class = CategorySerializer

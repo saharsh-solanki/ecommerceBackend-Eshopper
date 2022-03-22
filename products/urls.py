@@ -20,6 +20,7 @@ from products import views
 
 urlpatterns = [
     path("api/products/", views.ProductView.as_view()),
+    path("api/products/<int:pk>", views.SingleProductView.as_view()),
     path("api/category/", views.ProductCategoryhView.as_view()),
     path("api/site/detail/", views.ExtraDetailView.as_view()),
 ]

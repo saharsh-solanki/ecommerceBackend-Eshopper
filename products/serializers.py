@@ -55,10 +55,12 @@ class ProductSerializer(serializers.ModelSerializer):
         return self.instance.count()
 
     def get_size(self, obj):
-        return ProductSize.objects.filter(product_size_key__id=obj.id).values_list("sizes__size", flat=True)
+        # return ProductSize.objects.filter(product_size_key__id=obj.id).values_list("sizes__size", flat=True)
+        return list(ProductSize.objects.filter(product_size_key__id=obj.id).values_list("sizes__size",flat=True).distinct())
 
     def get_color(self, obj):
-        return ProductSize.objects.filter(product_size_key__id=obj.id).values_list("color__color", flat=True)
+        # return ProductSize.objects.filter(product_size_key__id=obj.id).values_list("color__color", flat=True)
+        return list(ProductSize.objects.filter(product_size_key__id=obj.id).values_list("color__color",flat=True).distinct())
 
     def get_stock_detail(self, obj):
         stock_obj = ProductSize.objects.filter(product_size_key__id=obj.id)
