@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'wishlist',
     'contactus_and_newsletter',
     'userOrders',
+    'PaytmGatway',
 ]
 
 MIDDLEWARE = [

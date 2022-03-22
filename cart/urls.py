@@ -20,5 +20,6 @@ from cart import views
 
 urlpatterns = [
     path("api/cart/", views.CartView.as_view()),
+    path("api/proccedtocheckout/", views.ProccedToCheckoutView.as_view()),
     path("api/cart/<int:pk>", views.CartView.as_view()),
 ]
