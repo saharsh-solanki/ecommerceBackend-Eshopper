@@ -48,7 +48,10 @@ class SiteUserSerializer(serializers.ModelSerializer):
     def get_profile_image(self, obj):
         request = self.context.get('request')
         if obj.profile_image:
-            return request.build_absolute_uri(obj.profile_image.url)
+            try:
+                return request.build_absolute_uri(obj.profile_image.url)
+            except:
+                return obj.profile_image.url
         else:
             return  request.build_absolute_uri("/media/media/profile_images/deafult_user_image.png")
 

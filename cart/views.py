@@ -94,4 +94,4 @@ class ProccedToCheckoutView( generics.ListAPIView):
             if cart["product"]["color"]:
                 if 'color' not in cart['extra_info']:
                     return  Response({"details": "Please select color"},status=status.HTTP_400_BAD_REQUEST)
-        return Response()
+        return Response({},status=status.HTTP_200_OK)

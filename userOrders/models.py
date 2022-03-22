@@ -1,6 +1,9 @@
 from django.db import models
 
 # Create your models here.
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+
 from address.models import Address
 from products.models import Product
 from user.models import SiteUser
@@ -43,3 +46,28 @@ class Orders(models.Model):
 
     def __str__(self):
         return self.user.email
+
+def get_order_id():
+        import random
+        valid = True
+        orderId = "None"
+        while valid == True:
+            orderId = "ORDER_" + str(random.randint(1000, 1000000000))
+            if Orders.objects.filter(order_id=orderId).exists():
+                pass
+            else:
+                valid = False
+        # obj.order_id = orderId
+        # obj.save()
+        return orderId
+
+@receiver(pre_save,sender=Orders)
+def create_order_id(sender,instance,**kwargs):
+    if not instance.order_id:
+        instance.order_id  = get_order_id()
+
+
+
+# @receiver(post_save,sender=Orders)
+# def save_order_model(sender,instance,**kwargs):
+#     instance.save()

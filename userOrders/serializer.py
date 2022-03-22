@@ -16,7 +16,7 @@ from rest_framework.response import Response
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    order_id = serializers.SerializerMethodField(read_only=True)
+    order_id = serializers.CharField(read_only=True)
     address_id = serializers.CharField(required=False)
     user_id = serializers.PrimaryKeyRelatedField(queryset=SiteUser.objects.all(), write_only=True)
     user = SiteUserSerializer(read_only=True)
@@ -33,7 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
         extra_kwargs = {
-            'status': {'read_only': True},
+            # 'status': {'read_only': True},
             'promocode': {'read_only': True},
             'deliveryStatus': {'read_only': True},
             'dehliveryId': {'read_only': True},
@@ -42,17 +42,19 @@ class OrderSerializer(serializers.ModelSerializer):
             'id': {"read_only": True}
         }
 
-    def get_order_id(self, obj):
-        import random
-        valid = True
-        orderId = "None"
-        while valid == True:
-            orderId = "ORDER_" + str(random.randint(1000, 1000000000))
-            if Orders.objects.filter(order_id=orderId).exists():
-                pass
-            else:
-                valid = False
-        return orderId
+    # def get_order_id(self, obj):
+    #     import random
+    #     valid = True
+    #     orderId = "None"
+    #     while valid == True:
+    #         orderId = "ORDER_" + str(random.randint(1000, 1000000000))
+    #         if Orders.objects.filter(order_id=orderId).exists():
+    #             pass
+    #         else:
+    #             valid = False
+    #     # obj.order_id = orderId
+    #     # obj.save()
+    #     return orderId
 
     def create(self, validated_data):
         obj = self.getCart(validated_data["user_id"])
@@ -65,17 +67,18 @@ class OrderSerializer(serializers.ModelSerializer):
         user = validated_data.pop("user_id")
         if validated_data["paymentType"] == "COD":
             validated_data['status'] = "SUCCESS"
+        # validated_data["order_id"] = self.get_order_id("c")
+        # self.order_id =  validated_data["order_id"]
         order = Orders.objects.create(
             address=AddressSerializer(instance=Address.objects.get(id=address)).data,
             products=products, **validated_data, TotalPaidAmount=totalPaidAmount,
             user=user, cartdata=cartdata
         )
-        self.deleteCart(user)
+        if validated_data["status"] == "SUCCESS":
+            self.deleteCart(user)
         return order
 
     def getCart(self, obj):
-        from django.core import serializers
-        serializers.serialize("json", Cart.objects.all())
         cartdata = Cart.objects.filter(user__email=obj.email)
         CartSerializedData = json.loads(json.dumps(CartSerializer(instance=cartdata, many=True).data))
         amountTotal = 0
