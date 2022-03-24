@@ -135,3 +135,4 @@ report.html
 
 */migrations/0*.py
 #media/media/profile_images/*
+staticfiles/
