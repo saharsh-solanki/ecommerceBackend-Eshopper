@@ -137,5 +137,5 @@ report.html
 #media/media/profile_images/*
 staticfiles/*
 
-.*
+.*/*
 runtime.txt
