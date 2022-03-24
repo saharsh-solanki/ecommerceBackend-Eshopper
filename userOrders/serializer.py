@@ -86,7 +86,7 @@ class OrderSerializer(serializers.ModelSerializer):
         products = []
         for cart in cartdata:
             products.append(json.loads(json.dumps(ProductSerializer(instance=cart.product).data)))
-            amountTotal = amountTotal + cart.product.price
+            amountTotal = amountTotal + (cart.product.price * cart.quantity)
 
         return {"products": products, "cartdata": CartSerializedData, "total": amountTotal + shipping}
 

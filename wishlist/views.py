@@ -16,6 +16,11 @@ class WishlistView(generics.ListCreateAPIView,generics.DestroyAPIView):
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
+
+    def get_object(self):
+        if "pk" in self.kwargs:
+            return self.get_queryset().filter(product__id=self.kwargs["pk"])
+
     def create(self, request, *args, **kwargs):
         request.data['user'] = request.user.id
         if self.get_queryset().filter(product__id = request.data["product"]).exists():

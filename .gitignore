@@ -134,3 +134,4 @@ report.html
 *.png
 
 */migrations/0*.py
+media/media/profile_images/*
