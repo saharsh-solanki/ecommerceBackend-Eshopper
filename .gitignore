@@ -131,7 +131,7 @@ dmypy.json
 log.html
 output.xml
 report.html
-*.png
+#*.png
 
 */migrations/0*.py
-media/media/profile_images/*
+#media/media/profile_images/*
