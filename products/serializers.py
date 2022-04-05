@@ -11,6 +11,12 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = "__all__"
 
+class ProductImagesSerializerForAdmin(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = "__all__"
+
 class ProductCategorySerializer(serializers.ModelSerializer):
     '''Product Size Serialzer That return deials of product size and colors'''
     product_count = serializers.SerializerMethodField(read_only=True)
@@ -26,6 +32,19 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         model = ProductCategory
         fields = ["category","icon","id","sub_category","product_count"]
 
+
+class ProductSerializerForAdmin(serializers.ModelSerializer):
+    '''Product Serializer return product details related to other modals also'''
+    category  = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Product
+        # fields = ["product_name", "id", "price", "description", "size", "color", "stock_detail","images"]
+        fields = "__all__"
+
+
+    def get_category(self,obj):
+        return  list(ProductCategory.objects.all().values("id","category","icon"))
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):
@@ -91,6 +110,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_sub_category(self, obj):
         return obj.sub_category.all().values_list("category", flat=True)
+
+class productCategrySerializerForAdmin(serializers.ModelSerializer):
+    '''Product Category Serializer Return the name of category and sub category'''
+    # sub_category = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductCategory
+        fields = "__all__"# ["category", "sub_category","icon"]
+
+    # def get_sub_category(self, obj):
+    #     return obj.sub_category.all().values_list("category", flat=True)
+
 
 
 class ExtraDetailSerializer(serializers.Serializer):

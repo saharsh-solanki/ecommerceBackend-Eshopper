@@ -15,6 +15,11 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 
 
+class OrderSerializerForAdmin(serializers.ModelSerializer   ):
+    class Meta:
+        model = Orders
+        fields = "__all__"
+
 class OrderSerializer(serializers.ModelSerializer):
     order_id = serializers.CharField(read_only=True)
     address_id = serializers.CharField(required=False)

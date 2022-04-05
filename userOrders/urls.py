@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView , TokenVerifyView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from userOrders.views import UserOrdersView, PaymentCODView, UserOrdersDetailView
+from userOrders.views import UserOrdersView, PaymentCODView, UserOrdersDetailView, AdminOrderView
 
 urlpatterns = [
     path("api/user/orders", UserOrdersView.as_view(), name="List Order "),
     path("api/user/orders/<int:pk>", UserOrdersDetailView.as_view(), name="List "),
     path("api/payment/pay/cod", PaymentCODView.as_view(), name="List Order "),
+
+    # '''Admin user Urls . '''
+    path("api/admin/orders/", AdminOrderView.as_view({"get": "list", "post": "create"}) ),
+    path("api/admin/orders/<int:pk>", AdminOrderView.as_view({"delete": "destroy", "patch": "update"}), name="List "),
 ]

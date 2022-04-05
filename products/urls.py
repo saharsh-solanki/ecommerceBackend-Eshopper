@@ -17,10 +17,26 @@ from django.contrib import admin
 from django.urls import path
 
 from products import views
+from products.views import AdminProductView, AdminProductCatgeoryView, AdminProductImagesView
 
 urlpatterns = [
     path("api/products/", views.ProductView.as_view()),
     path("api/products/<int:pk>", views.SingleProductView.as_view()),
     path("api/category/", views.ProductCategoryhView.as_view()),
     path("api/site/detail/", views.ExtraDetailView.as_view()),
+    # Admin Products
+    path("api/admin/product/", AdminProductView.as_view({"get": "list", "post": "create"}), name="adminUser"),
+    path("api/admin/product/<int:pk>", AdminProductView.as_view({"delete": "destroy", "patch": "update"}),
+         name="adminUsesr"),
+    path("api/admin/product/category/", AdminProductCatgeoryView.as_view({"get": "list", "post": "create"}),
+         name="adminUser"),
+    path("api/admin/product/category/<int:pk>",
+         AdminProductCatgeoryView.as_view({"delete": "destroy", "patch": "update"}),
+         name="adminUsesr"),
+    path("api/admin/product/product_image/", AdminProductImagesView.as_view({"get": "list", "post": "create"}),
+         name="adminUser"),
+    path("api/admin/product/product_image/<int:pk>",
+         AdminProductImagesView.as_view({"delete": "destroy", "patch": "update"}),
+         name="adminUsesr"),
+
 ]

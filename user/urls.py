@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from user.views import MyTokenObtainPairView, SiteUserView, UpdateProfile
+from user.views import MyTokenObtainPairView, SiteUserView, UpdateProfile, AdminUserView, ListAllFields
 
 urlpatterns = [
     path("api/user/", SiteUserView.as_view(), name="createaccount"),
@@ -25,4 +25,9 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="RefreshToken"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="RefreshToken"),
     path("api/user/upload_profile_image/", UpdateProfile.as_view(), name="createaccount"),
+    # Admin User
+    path("api/admin/user/", AdminUserView.as_view({"get":"list","post":"create"}), name="adminUser"),
+    path("api/admin/user/<int:pk>", AdminUserView.as_view({"delete":"destroy","patch":"update"}), name="adminUsesr"),
+
+    path("api/list/keys/",ListAllFields.as_view())
 ]

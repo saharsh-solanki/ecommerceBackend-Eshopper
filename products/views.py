@@ -9,10 +9,14 @@ from rest_framework import filters
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from products.models import Product, ProductCategory, ProductSize
-from products.serializers import ProductSerializer, CategorySerializer, ExtraDetailSerializer
+from products.models import Product, ProductCategory, ProductSize, ProductImage
+from products.serializers import ProductSerializer, CategorySerializer, ExtraDetailSerializer, \
+    ProductSerializerForAdmin, productCategrySerializerForAdmin, ProductImagesSerializerForAdmin
 from django.db.models import Q
 
 
@@ -119,3 +123,71 @@ class ExtraDetailView(generics.ListAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data[0])
+
+
+
+class AdminProductView(ModelViewSet):
+    ''' User View Function For Admin '''
+    permission_classes = [IsAuthenticated,IsAdminUser]
+    serializer_class = ProductSerializerForAdmin
+    queryset = Product.objects.all()
+    parser_classes = (MultiPartParser,)
+
+    def update(self, request, *args, **kwargs):
+        # partial = kwargs.pop('partial', )
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+
+
+class AdminProductCatgeoryView(ModelViewSet):
+    ''' User View Function For Admin '''
+    permission_classes = [IsAuthenticated,IsAdminUser]
+    serializer_class = productCategrySerializerForAdmin
+    queryset = ProductCategory.objects.all()
+    parser_classes = (MultiPartParser,)
+
+    def update(self, request, *args, **kwargs):
+        # partial = kwargs.pop('partial', )
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+
+class AdminProductImagesView(ModelViewSet):
+    ''' User View Function For Admin '''
+    permission_classes = [IsAuthenticated,IsAdminUser]
+    serializer_class = ProductImagesSerializerForAdmin
+    queryset = ProductImage.objects.all()
+    parser_classes = (MultiPartParser,)
+
+    def update(self, request, *args, **kwargs):
+        # partial = kwargs.pop('partial', )
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
