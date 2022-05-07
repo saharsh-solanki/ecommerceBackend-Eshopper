@@ -44,7 +44,7 @@ def start_payment(request):
             'INDUSTRY_TYPE_ID': 'Retail',
             'WEBSITE': 'WEBSTAGING',
             'CHANNEL_ID': 'WEB',
-            'CALLBACK_URL': request.build_absolute_uri('/')+'api/payment/handlepayment/',
+            'CALLBACK_URL': os.getenv("ISLOCAL","https://e-shopper-backend.herokuapp.com/")+'api/payment/handlepayment/',
             # this is the url of handlepayment function, paytm will send a POST request to the fuction associated with this CALLBACK_URL
         }
 
@@ -86,7 +86,7 @@ def handlepayment(request):
             order.status = "SUCCESS"
             order.save()
             OrderSerializer(instance=order).deleteCart(order.user)
-            return  HttpResponseRedirect("http://localhost:3000/user/orders/"+str(order.id))
+            return  HttpResponseRedirect(os.getenv("ISLOCAL","https://e-shopper-ujjain.herokuapp.com/")+"user/orders/"+str(order.id))
         else:
             order = Orders.objects.get(order_id=response_dict["ORDERID"])
             order.status = "FAILED"
