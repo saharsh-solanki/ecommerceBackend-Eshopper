@@ -138,4 +138,4 @@ report.html
 staticfiles/*
 .*
 .heroku/*
-*.txt
+#*.txt
