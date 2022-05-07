@@ -14,8 +14,8 @@ from cart.serializer import CartSerializer
 from userOrders.models import Orders
 from userOrders.serializer import OrderSerializer
 
-MID = os.environ.get("MERCHANTID")
-MKEY = os.environ.get("MERCHANTKEY")
+MID = "OUEept11459745037985"#os.environ.get("MERCHANTID")
+MKEY = "1Ihx&s#y1St!Dk0m"#os.environ.get("MERCHANTKEY","1Ihx&s#y1St!Dk0m")
 
 
 # env = os.environ.
@@ -44,7 +44,7 @@ def start_payment(request):
             'INDUSTRY_TYPE_ID': 'Retail',
             'WEBSITE': 'WEBSTAGING',
             'CHANNEL_ID': 'WEB',
-            'CALLBACK_URL': 'http://127.0.0.1:8000/api/payment/handlepayment/',
+            'CALLBACK_URL': request.build_absolute_uri('/')+'api/payment/handlepayment/',
             # this is the url of handlepayment function, paytm will send a POST request to the fuction associated with this CALLBACK_URL
         }
 

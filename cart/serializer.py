@@ -9,7 +9,7 @@ from user.serializers import SiteUserSerializer
 
 
 class CartSerializer(serializers.ModelSerializer):
-    quantity = serializers.IntegerField(max_value=10,error_messages={"max_value":"You Can order only 10 per order"})
+    quantity = serializers.IntegerField(error_messages={"max_value":"You Can order only 10 per order"})
     product_detail = serializers.SerializerMethodField(read_only=True)
     # user = SiteUserSerializer(read_only=True)
     # user_id = serializers.PrimaryKeyRelatedField(queryset=SiteUser.objects.all(),write_only=True)

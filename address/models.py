@@ -34,8 +34,8 @@ class Address(models.Model):
     ''' Contains address of user '''
     user = models.ForeignKey(SiteUser,related_name="AddressUser",on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
-    phone_number = models.BigIntegerField(max_length=10)
-    pincode = models.IntegerField(max_length=10)
+    phone_number = models.BigIntegerField()
+    pincode = models.IntegerField()
     state = models.ForeignKey(State, related_name="address_state", on_delete=models.CASCADE)
     city = models.ForeignKey(City, related_name="address_city", on_delete=models.CASCADE)
     address = models.CharField(max_length=100)

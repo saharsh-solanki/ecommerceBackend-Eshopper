@@ -11,7 +11,7 @@ class Product(models.Model):
     price = models.FloatField(max_length=100)
     description = models.TextField(max_length=400, blank=True, null=True,
                                    default="Description is not available for this product")
-    product_category = models.ManyToManyField("ProductCategory", related_name="product_category", null=True, blank=True)
+    product_category = models.ManyToManyField("ProductCategory", related_name="product_category", blank=True)
     color_json = models.JSONField(null=True, blank=True)
 
     def __str__(self):
@@ -74,7 +74,7 @@ class ProductImage(models.Model):
 class ProductCategory(models.Model):
     icon = models.ImageField(upload_to='media/category_icon', null=True, blank=True)
     category = models.CharField(max_length=250)
-    sub_category = models.ManyToManyField("ProductCategory", related_name="product_sub_category", null=True, blank=True)
+    sub_category = models.ManyToManyField("ProductCategory", related_name="product_sub_category", blank=True)
 
     def __str__(self):
         return self.category

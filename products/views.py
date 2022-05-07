@@ -179,7 +179,6 @@ class AdminProductImagesView(ModelViewSet):
     parser_classes = (MultiPartParser,)
 
     def update(self, request, *args, **kwargs):
-        # partial = kwargs.pop('partial', )
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)

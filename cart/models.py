@@ -8,5 +8,5 @@ from user.models import SiteUser
 class Cart(models.Model):
     user = models.ForeignKey(SiteUser,related_name="CartUser",on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name="CartProduct",on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(max_length=10,default=1)
+    quantity = models.PositiveIntegerField(default=1)
     extra_info = models.JSONField(default=dict)
